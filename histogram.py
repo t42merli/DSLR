@@ -17,6 +17,6 @@ plt.hist([houses['Gryffindor'], houses['Slytherin'], houses['Ravenclaw'],
          label=["Gryffindor", "Slytherin", "Ravenclaw", "Hufflepuff"], histtype='barstacked')
 
 plt.ylabel('Nb élèves')
-plt.xlabel('note')
+plt.xlabel('Note (care of maical creatures)')
 plt.legend()
 plt.show()
