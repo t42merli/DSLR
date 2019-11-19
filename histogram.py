@@ -8,7 +8,7 @@ data = pd.read_csv('dataset_train.csv', index_col="Index")
 def getgrade(category):
     houses = {"Gryffindor": [], "Slytherin": [],
               "Ravenclaw": [], "Hufflepuff": []}
-    for index, row in data.iterrows():
+    for _index, row in data.iterrows():
         if(np.isnan(row[category]) == False):
             houses[row['Hogwarts House']].append(row[category])
     return houses
