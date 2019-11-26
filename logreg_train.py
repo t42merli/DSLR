@@ -18,9 +18,15 @@ houses = data["Hogwarts House"]
 
 data = data.drop('Hogwarts House', 1)
 
+# print(data.min(),"\n", data.max())
+
+data=((data-data.min())/(data.max()-data.min()))
+
+
 data.insert(0, 'ones', 1)
 
-size = len(data.index)
+
+m = len(data.index)
 
 np.set_printoptions(threshold=np.inf)
 
@@ -36,7 +42,7 @@ def train(thetas, house):
     i = 0
     for column in data.columns:
         summ = np.sum((sigmoid(np.dot(data, thetas)) - y) * data[column])
-        tmp[i] = 1/size * summ
+        tmp[i] = tmp[i] - 1/m * summ
         i += 1
     return tmp
 
@@ -45,10 +51,12 @@ thetas = []
 
 for house in houseNames:
     newThetas = np.zeros(11)
-    i = 1
+    i = 1000
     while (i):
         i -= 1
         newThetas = train(newThetas, house)
     thetas.append(newThetas)
+
+
 
 print(thetas)
