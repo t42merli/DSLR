@@ -4,6 +4,7 @@ import numpy as np
 
 data = pd.read_csv('dataset_train.csv', index_col="Index")
 
+data['Best Hand'] = data['Best Hand'].replace({'Right':1, 'Left': 0})
 
 def getgrade(category):
     houses = {"Gryffindor": [], "Slytherin": [],
