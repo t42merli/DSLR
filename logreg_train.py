@@ -13,16 +13,20 @@ data = pd.read_csv('dataset_train.csv', index_col="Index",
 
 houseNames = ['Gryffindor', 'Slytherin', 'Hufflepuff', 'Ravenclaw']
 
-data = data.dropna()
+houses = {'Gryffindor': [], 'Slytherin': [], 'Hufflepuff': [], 'Ravenclaw': []}
 
-houses = data["Hogwarts House"]
+for houseName in houseNames:
+    for h in data['Hogwarts House']:
+        houses[houseName].append(1 if h == houseName else 0)
 
 data = data.drop('Hogwarts House', 1)
 
-model = {'houses':houses, 'min':data.min(), max:data.max()}
+data = data.fillna(data.mean())
 
-data=((data-data.min())/(data.max()-data.min()))
+data = ((data-data.min())/(data.max()-data.min()))
 
+model = {'houseNames': houseNames, 'min': data.min(), 'max': data.max(),
+         'mean': data.mean()}
 
 data.insert(0, 'ones', 1)
 
@@ -37,14 +41,13 @@ thetas = np.ones(11)
 
 def train(thetas, house):
     tmp = np.array(thetas)
-    y = []
-    for h in houses:
-        y.append(1 if h == house else 0)
     i = 0
     for column in data.columns:
-        summ = np.sum((sigmoid(np.dot(data, thetas)) - y) * data[column])
-        tmp[i] = tmp[i] - 1/m * summ
-        i += 1
+        if(column != 'houses'):
+            summ = np.sum((sigmoid(np.dot(data, thetas)) - houses[house])
+                          * data[column])
+            tmp[i] = tmp[i] - 1/m * summ
+            i += 1
     return tmp
 
 
@@ -52,12 +55,18 @@ thetas = []
 
 for house in houseNames:
     newThetas = np.zeros(11)
-    i = 1000
+    i = 2000
     while (i):
         i -= 1
         newThetas = train(newThetas, house)
     thetas.append(newThetas)
 
+print(thetas)
+
 model['thetas'] = thetas
 
-print(pickle.dumps(model))
+modelFile = open('model', 'wb')
+
+pickle.dump(model, modelFile)
+
+modelFile.close()
