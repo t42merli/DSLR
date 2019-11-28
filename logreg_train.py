@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import pickle
 
 
 def sigmoid(x):
@@ -18,7 +19,7 @@ houses = data["Hogwarts House"]
 
 data = data.drop('Hogwarts House', 1)
 
-# print(data.min(),"\n", data.max())
+model = {'houses':houses, 'min':data.min(), max:data.max()}
 
 data=((data-data.min())/(data.max()-data.min()))
 
@@ -57,6 +58,6 @@ for house in houseNames:
         newThetas = train(newThetas, house)
     thetas.append(newThetas)
 
+model['thetas'] = thetas
 
-
-print(thetas)
+print(pickle.dumps(model))
