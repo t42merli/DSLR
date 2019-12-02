@@ -30,14 +30,7 @@ model = {'houseNames': houseNames, 'min': data.min(), 'max': data.max(),
 
 data.insert(0, 'ones', 1)
 
-
 m = len(data.index)
-
-np.set_printoptions(threshold=np.inf)
-
-
-thetas = np.ones(11)
-
 
 def train(thetas, house):
     tmp = np.array(thetas)

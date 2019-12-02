@@ -43,5 +43,5 @@ data = (data-model['min'])/(model['max']-model['min'])
 
 data.insert(0, 'ones', 1)
 
-for index, row in data.iterrows(False):
-    print(index, ",", predict(row))
+for index, row in data.iterrows():
+    print("%d,%s"% (index,predict(row)))
