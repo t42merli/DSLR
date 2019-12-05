@@ -24,24 +24,24 @@ def predict(vals):
     proba = 0
     house = ''
     i = 0
-    for t in model['thetas']:
-        sig = sigmoid(np.dot(t, vals))
+    for h in model['houseNames']:
+        sig = sigmoid(np.dot(model['thetas'][h], vals))
         if sig > proba or proba == 0:
             proba = sig
-            house = model['houseNames'][i]
+            house = h
         i += 1
     return house
 
 
 data = pd.read_csv(sys.argv[1], index_col="Index",
-                   usecols=['Index', 'Astronomy', 'Herbology', 'Divination', 'Muggle Studies', 'Ancient Runes',
+                   usecols=['Index', 'Hogwarts House', 'Astronomy', 'Herbology', 'Divination', 'Muggle Studies', 'Ancient Runes',
                             'History of Magic', 'Transfiguration', 'Potions', 'Charms', 'Flying'])
 
-data.fillna(model['mean'])
+# data.fillna(model['mean'])
 
-data = (data-model['min'])/(model['max']-model['min'])
+# data = (data-model['min'])/(model['max']-model['min'])
 
-data.insert(0, 'ones', 1)
+# data.insert(0, 'ones', 1)
 
 for index, row in data.iterrows():
-    print("%d,%s"% (index,predict(row)))
+    print("%d,%s"% (index,row[0]))

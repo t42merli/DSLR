@@ -19,10 +19,10 @@ data = data.drop('Hogwarts House', 1)
 
 data = data.fillna(data.mean())
 
-data = ((data-data.min())/(data.max()-data.min()))
-
 model = {'houseNames': houseNames, 'min': data.min(), 'max': data.max(),
          'mean': data.mean()}
+
+data = ((data-data.min())/(data.max()-data.min()))
 
 data.insert(0, 'ones', 1)
 
@@ -37,7 +37,6 @@ def cost_f(thetas, y):
     sig = sigmoid(np.dot(data, thetas))
     return -1.0/m * np.sum(y * np.log(sig) + (1-y) * np.log(1-sig))
 
-
 def grad_desc(thetas, y):
     tmp = np.array(thetas)
     i = 0
@@ -48,21 +47,18 @@ def grad_desc(thetas, y):
     return tmp
 
 
-thetas = []
-
+thetas = {'Gryffindor': [], 'Slytherin': [], 'Hufflepuff': [], 'Ravenclaw': []}
 
 for house in houseNames:
     newThetas = np.zeros(11)
     cost = cost_f(newThetas, houses[house])
     diff = 1
-    i = 0
     while (diff > 0.0001):
         old_cost = cost
         newThetas = grad_desc(newThetas, houses[house])
         cost = cost_f(newThetas, houses[house])
         diff = old_cost - cost
-        i+=1
-    thetas.append(newThetas)
+    thetas[house] = newThetas
 
 print(thetas)
 
