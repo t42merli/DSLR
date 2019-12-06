@@ -23,21 +23,18 @@ def sigmoid(x):
 def predict(vals):
     proba = 0
     house = ''
-    i = 0
     for h in model['houseNames']:
         sig = sigmoid(np.dot(model['thetas'][h], vals))
         if sig > proba or proba == 0:
             proba = sig
             house = h
-        i += 1
     return house
-
 
 data = pd.read_csv(sys.argv[1], index_col="Index",
                    usecols=['Index', 'Astronomy', 'Herbology', 'Divination', 'Muggle Studies', 'Ancient Runes',
                             'History of Magic', 'Transfiguration', 'Potions', 'Charms', 'Flying'])
 
-data.fillna(model['mean'])
+data = data.fillna(model['mean'])
 
 data = (data-model['min'])/(model['max']-model['min'])
 
