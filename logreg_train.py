@@ -66,7 +66,7 @@ for house in houseNames:
     newThetas = np.zeros(11)
     cost = cost_f(newThetas, houses[house])
     diff = 1
-    while (diff > 0.00001):
+    while (diff > 0.0005):
         old_cost = cost
         newThetas = grad_desc(newThetas, houses[house])
         cost = cost_f(newThetas, houses[house])
