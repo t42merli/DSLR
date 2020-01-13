@@ -3,24 +3,12 @@ import numpy as np
 import pickle
 import sys
 
-if(len(sys.argv) < 3):
-    print('please give the filename of dataset to make prediction on and the filename of the trained model',
-          '\n Usage: logreg_predict "dataset" "model"')
-    exit()
-
-try:
-    modelFile = open(sys.argv[2], 'rb')
-    model = pickle.load(modelFile)
-    modelFile.close()
-except FileNotFoundError:
-    print('please provide a valid training model file')
-    exit()
 
 def sigmoid(x):
     return 1 / (1 + np.exp(-x))
 
 
-def predict(vals):
+def predict(vals, model):
     proba = 0
     house = ''
     for h in model['houseNames']:
@@ -30,15 +18,33 @@ def predict(vals):
             house = h
     return house
 
-data = pd.read_csv(sys.argv[1], index_col="Index",
-                   usecols=['Index', 'Astronomy', 'Herbology', 'Divination', 'Muggle Studies', 'Ancient Runes',
-                            'History of Magic', 'Transfiguration', 'Potions', 'Charms', 'Flying'])
+if __name__ == "__main__":
+    if(len(sys.argv) < 3):
+        print('please give the filename of dataset to make prediction on and the filename of the trained model',
+              '\n Usage: logreg_predict "dataset" "model"')
+        exit()
 
-data = data.fillna(model['mean'])
+    try:
+        modelFile = open(sys.argv[2], 'rb')
+        model = pickle.load(modelFile)
+        modelFile.close()
+    except FileNotFoundError:
+        print('please provide a valid training model file')
+        exit()
 
-data = (data-model['min'])/(model['max']-model['min'])
+    data = pd.read_csv(sys.argv[1], index_col="Index",
+                       usecols=['Index', 'Astronomy', 'Herbology', 'Divination', 'Muggle Studies', 'Ancient Runes',
+                                'History of Magic', 'Transfiguration', 'Potions', 'Charms', 'Flying'])
 
-data.insert(0, 'ones', 1)
+    data = data.fillna(model['mean'])
 
-for index, row in data.iterrows():
-    print("%d,%s"% (index,predict(row)))
+    data = (data-model['min'])/(model['max']-model['min'])
+
+    data.insert(0, 'ones', 1)
+
+    f = open('houses.csv', 'w')
+
+    f.write('Index,Hogwarts House\n')
+
+    for index, row in data.iterrows():
+        f.write("%d,%s\n"% (index,predict(row, model)))
